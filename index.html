@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tapeout — Course &amp; Interview Review</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2313294B'/%3E%3Ccircle cx='16' cy='9' r='2.6' fill='%23E84A27'/%3E%3Ccircle cx='9' cy='21' r='2.6' fill='%23E84A27'/%3E%3Ccircle cx='23' cy='21' r='2.6' fill='%23E84A27'/%3E%3Cline x1='14.3' y1='11' x2='10.4' y2='18.6' stroke='%23E84A27' stroke-width='1.8'/%3E%3Cline x1='17.7' y1='11' x2='21.6' y2='18.6' stroke='%23E84A27' stroke-width='1.8'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    --bg: #F3F6FB;
+    --surface: #FFFFFF;
+    --surface-2: #EAEFF7;
+    --border: #DCE3EE;
+    --nav-bg: #13294B;
+    --nav-ink: #FFFFFF;
+    --nav-muted: #9FB0CC;
+    --ink: #13294B;
+    --ink-soft: #34486A;
+    --muted: #64748C;
+    --accent: #E84A27;
+    --accent-ink: #A6371C;
+    --accent-soft: #FDE3D9;
+    --accent-grad: linear-gradient(135deg, #F0602F, #E0431F);
+    --good: #1E8E5A;
+    --good-soft: #DEF3E8;
+    --bad: #C0293D;
+    --bad-soft: #FBE1E5;
+    --radius-s: 8px;
+    --radius: 14px;
+    --radius-l: 20px;
+    --shadow: 0 1px 2px rgba(19,41,75,0.06), 0 6px 18px rgba(19,41,75,0.06);
+    --shadow-hover: 0 2px 4px rgba(19,41,75,0.08), 0 10px 26px rgba(19,41,75,0.1);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0B1626;
+      --surface: #16294A;
+      --surface-2: #1E3563;
+      --border: #2E4A78;
+      --nav-bg: #0D1E38;
+      --nav-ink: #FFFFFF;
+      --nav-muted: #8FA0BC;
+      --ink: #EEF3FB;
+      --ink-soft: #C9D6EA;
+      --muted: #90A2C0;
+      --accent: #FF8659;
+      --accent-ink: #FFB08C;
+      --accent-soft: rgba(255,134,89,0.18);
+      --accent-grad: linear-gradient(135deg, #FF8659, #E8592F);
+      --good: #4FD79B;
+      --good-soft: rgba(79,215,155,0.16);
+      --bad: #FF6B7A;
+      --bad-soft: rgba(255,107,122,0.16);
+      --shadow: 0 1px 2px rgba(0,0,0,0.3);
+      --shadow-hover: 0 6px 20px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0B1626;
+    --surface: #16294A;
+    --surface-2: #1E3563;
+    --border: #2E4A78;
+    --nav-bg: #0D1E38;
+    --nav-ink: #FFFFFF;
+    --nav-muted: #8FA0BC;
+    --ink: #EEF3FB;
+    --ink-soft: #C9D6EA;
+    --muted: #90A2C0;
+    --accent: #FF8659;
+    --accent-ink: #FFB08C;
+    --accent-soft: rgba(255,134,89,0.18);
+    --accent-grad: linear-gradient(135deg, #FF8659, #E8592F);
+    --good: #4FD79B;
+    --good-soft: rgba(79,215,155,0.16);
+    --bad: #FF6B7A;
+    --bad-soft: rgba(255,107,122,0.16);
+    --shadow: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-hover: 0 6px 20px rgba(0,0,0,0.35);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    min-height: 100vh;
+  }
+  ::selection { background: var(--accent-soft); color: var(--ink); }
+  a { color: inherit; text-decoration: none; }
+  button, input { font-family: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  svg { display: block; }
+
+  h1, h2, h3, .disp {
+    font-family: var(--font-sans);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+  .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 11.5px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--accent-ink);
+    background: var(--accent-soft);
+    display: inline-block;
+    padding: 5px 11px;
+    border-radius: 999px;
+  }
+
+  .shell {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    min-height: 100vh;
+    max-width: 1220px;
+    margin: 0 auto;
+  }
+  @media (max-width: 860px) {
+    .shell { grid-template-columns: 1fr; }
+    .navrail { position: static; height: auto; }
+  }
+
+  /* ---------- Nav rail ---------- */
+  .navrail {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--nav-bg);
+    color: var(--nav-ink);
+    padding: 24px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; padding: 4px 8px 6px; }
+  .brand-badge {
+    width: 34px; height: 34px; border-radius: 10px;
+    background: var(--accent-grad);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 3px 10px rgba(232,74,39,0.35);
+  }
+  .brand-badge svg { width: 19px; height: 19px; stroke: white; }
+  .brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+  .brand-name { font-family: var(--font-sans); font-weight: 800; font-size: 17px; letter-spacing: -0.01em; }
+  .brand-tag { font-size: 11px; color: var(--nav-muted); margin-top: 2px; }
+
+  nav.navlist { display: flex; flex-direction: column; gap: 3px; }
+  .nav-group-label {
+    font-family: var(--font-sans);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--nav-muted);
+    padding: 14px 10px 5px;
+  }
+  .navlink {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: 11px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    color: var(--nav-ink);
+  }
+  .navlink:hover { background: rgba(255,255,255,0.08); }
+  .navlink.active { background: var(--accent-grad); box-shadow: 0 3px 10px rgba(232,74,39,0.3); }
+  .navlink .nicon { width: 18px; height: 18px; flex-shrink: 0; stroke: currentColor; opacity: 0.92; }
+  .navlink-text { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+  .navlink-name { font-family: var(--font-sans); font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .navlink-sub { font-size: 10.5px; color: var(--nav-muted); }
+  .navlink.active .navlink-sub { color: rgba(255,255,255,0.85); }
+  .navbadge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .navlink.active .navbadge { background: rgba(255,255,255,0.22); }
+
+  .navrail-footer {
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .reset-btn {
+    background: none;
+    border: none;
+    color: var(--nav-muted);
+    font-family: var(--font-sans);
+    font-size: 11.5px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: left;
+    padding: 6px 8px;
+  }
+  .reset-btn:hover { color: #FF9E85; }
+
+  /* ---------- Main ---------- */
+  main { padding: 34px 40px 90px; min-width: 0; }
+  @media (max-width: 640px) { main { padding: 22px 16px 70px; } }
+
+  .section-head {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-l);
+    padding: 26px 28px;
+    margin-bottom: 22px;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+  .section-head-icon {
+    width: 56px; height: 56px; border-radius: 16px;
+    background: var(--accent-grad);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 6px 16px rgba(232,74,39,0.3);
+  }
+  .section-head-icon svg { width: 30px; height: 30px; stroke: white; }
+  .section-head-text h1 { font-size: 26px; margin: 6px 0 6px; line-height: 1.15; }
+  .section-head-text .blurb { font-size: 14.5px; line-height: 1.55; color: var(--ink-soft); margin: 0; max-width: 58ch; }
+
+  .keyideas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 12px;
+    margin-bottom: 26px;
+  }
+  .keyidea {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 14px 15px;
+    border-left: 3px solid var(--accent);
+    box-shadow: var(--shadow);
+  }
+  .keyidea .topic {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 5px;
+    display: block;
+  }
+  .keyidea p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--muted); }
+
+  .qlist { display: flex; flex-direction: column; gap: 14px; }
+  .qcard {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: var(--radius-l);
+    padding: 20px 22px 22px;
+    box-shadow: var(--shadow);
+  }
+  .qcard[data-state="correct"] { box-shadow: var(--shadow), inset 3px 0 0 var(--good); }
+  .qcard[data-state="incorrect"] { box-shadow: var(--shadow), inset 3px 0 0 var(--bad); }
+
+  .qmeta { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .qnum {
+    width: 28px; height: 28px; border-radius: 999px;
+    background: var(--surface-2);
+    color: var(--ink-soft);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .qcard[data-state] .qnum { background: var(--accent-grad); color: white; }
+  .qtopic {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent-ink);
+    background: var(--accent-soft);
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+  .qstatus {
+    margin-left: auto;
+    font-family: var(--font-sans);
+    font-size: 11.5px;
+    font-weight: 800;
+    display: none;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+  .qcard[data-state="correct"] .qstatus { display: inline-flex; color: var(--good); background: var(--good-soft); }
+  .qcard[data-state="incorrect"] .qstatus { display: inline-flex; color: var(--bad); background: var(--bad-soft); }
+
+  .qprompt { font-size: 15.5px; line-height: 1.6; margin: 0 0 15px; font-weight: 500; }
+  .qprompt code {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    background: var(--surface-2);
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .opt {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-align: left;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1.5;
+    font-family: var(--font-sans);
+    font-weight: 500;
+  }
+  .opt:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
+  .opt .optdot {
+    width: 20px; height: 20px; border-radius: 999px;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .opt .optdot::after { content: ""; width: 9px; height: 9px; border-radius: 999px; background: transparent; }
+  .opt:disabled { cursor: default; }
+  .opt.correct { border-color: var(--good); background: var(--good-soft); }
+  .opt.correct .optdot { border-color: var(--good); }
+  .opt.correct .optdot::after { background: var(--good); }
+  .opt.wrong { border-color: var(--bad); background: var(--bad-soft); }
+  .opt.wrong .optdot { border-color: var(--bad); }
+  .opt.wrong .optdot::after { background: var(--bad); }
+
+  .short-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 10px 18px;
+    border-radius: 999px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+  }
+  .btn:hover { border-color: var(--accent); }
+  .btn.primary { background: var(--accent-grad); color: white; border-color: transparent; box-shadow: 0 4px 12px rgba(232,74,39,0.28); }
+  .btn.primary:hover { opacity: 0.92; border-color: transparent; }
+  .btn.good { border-color: var(--good); color: var(--good); }
+  .btn.good:hover { background: var(--good-soft); }
+  .btn.bad { border-color: var(--bad); color: var(--bad); }
+  .btn.bad:hover { background: var(--bad-soft); }
+
+  .answer-box {
+    margin-top: 14px;
+    padding: 14px 16px;
+    background: var(--surface-2);
+    border-radius: var(--radius);
+    display: none;
+  }
+  .answer-box.show { display: block; }
+  .answer-box .ans-label {
+    font-family: var(--font-sans);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: var(--accent-ink);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .answer-box .ans-text { font-size: 14.5px; margin: 0 0 5px; font-weight: 700; }
+  .answer-box .explain { font-size: 13.5px; line-height: 1.55; color: var(--muted); margin: 0; }
+
+  .explain-block { margin-top: 12px; padding: 13px 15px; background: var(--surface-2); border-radius: var(--radius); font-size: 13.5px; line-height: 1.55; color: var(--muted); display: none; }
+  .explain-block.show { display: block; }
+  .explain-block p { margin: 0; }
+
+  /* ---------- Home ---------- */
+  .hero {
+    background: var(--nav-bg);
+    color: white;
+    border-radius: var(--radius-l);
+    padding: 30px 32px;
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    box-shadow: var(--shadow);
+  }
+  .hero h1 { color: white; font-size: 28px; margin: 8px 0 8px; }
+  .hero p { color: var(--nav-muted); font-size: 14px; margin: 0; max-width: 48ch; line-height: 1.55; }
+  .hero .eyebrow { background: rgba(255,255,255,0.14); color: white; }
+  .hero-ring { flex-shrink: 0; }
+
+  .home-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px;
+  }
+  .home-card {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: var(--radius-l);
+    padding: 20px 20px 18px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .home-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
+  .home-card-top { display: flex; align-items: center; gap: 12px; }
+  .home-card-icon {
+    width: 42px; height: 42px; border-radius: 12px;
+    background: var(--accent-soft);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .home-card-icon svg { width: 22px; height: 22px; stroke: var(--accent-ink); }
+  .home-card .hc-code { font-family: var(--font-sans); font-size: 10.5px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  .home-card .hc-name { font-size: 16.5px; font-weight: 800; margin: 1px 0 0; font-family: var(--font-sans); }
+  .home-card .hc-desc { font-size: 12.5px; color: var(--muted); line-height: 1.5; margin: 0; }
+  .home-card-bottom { display: flex; align-items: center; gap: 10px; margin-top: auto; }
+  .ring-wrap { position: relative; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .ring-wrap .ring-pct { position: absolute; font-family: var(--font-mono); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .hc-stat { font-family: var(--font-mono); font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; font-weight: 600; }
+
+  /* ---------- Interview groups ---------- */
+  .group-title { font-size: 19px; margin: 30px 0 6px; }
+  .group-sub { font-size: 13.5px; color: var(--muted); margin: 0 0 16px; max-width: 60ch; line-height: 1.55; }
+  .prompt-list { display: flex; flex-direction: column; gap: 10px; }
+  .prompt-card {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 15px 17px;
+    box-shadow: var(--shadow);
+  }
+  .prompt-card .pq { font-size: 14.5px; font-weight: 700; margin: 0 0 6px; font-family: var(--font-sans); }
+  .prompt-card .ptip { font-size: 13px; color: var(--muted); margin: 0; line-height: 1.5; }
+  .checklist { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+  .checklist li {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 13.5px;
+    line-height: 1.55;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+  .checklist li .mark {
+    width: 20px; height: 20px; border-radius: 999px;
+    background: var(--accent-soft); color: var(--accent-ink);
+    font-family: var(--font-mono); font-size: 11px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .navlink, .opt, .btn, .home-card { transition: background-color 120ms ease, border-color 120ms ease, box-shadow 160ms ease, transform 160ms ease; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .home-card:hover { transform: none; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="navrail">
+    <div class="brand">
+      <div class="brand-badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 L12 4 L20 11"/><path d="M6 10 V20 H18 V10"/></svg></div>
+      <div class="brand-text">
+        <span class="brand-name">Tapeout</span>
+        <span class="brand-tag">Final checks before you ship</span>
+      </div>
+    </div>
+    <nav class="navlist" id="navlist"></nav>
+    <div class="navrail-footer">
+      <span class="navlink-sub mono" id="overallEyebrow" style="padding:0 10px;">0 / 0 reviewed</span>
+      <button class="reset-btn" id="resetBtn">Reset all progress</button>
+    </div>
+  </aside>
+  <main id="main"></main>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var STORAGE_KEY = "tapeout_progress_v2";
+
+  var ICONS = {
+    home: '<path d="M4 11 L12 4 L20 11"/><path d="M6 10 V20 H18 V10"/>',
+    cs225: '<circle cx="12" cy="5.5" r="2.1"/><circle cx="6" cy="14" r="2.1"/><circle cx="18" cy="14" r="2.1"/><line x1="10.6" y1="7.1" x2="7.3" y2="12.2"/><line x1="13.4" y1="7.1" x2="16.7" y2="12.2"/><line x1="6" y1="16.1" x2="6" y2="19"/><line x1="18" y1="16.1" x2="18" y2="19"/>',
+    ece391: '<rect x="7" y="7" width="10" height="10" rx="1.6"/><line x1="9.5" y1="3" x2="9.5" y2="7"/><line x1="14.5" y1="3" x2="14.5" y2="7"/><line x1="9.5" y1="17" x2="9.5" y2="21"/><line x1="14.5" y1="17" x2="14.5" y2="21"/><line x1="3" y1="9.5" x2="7" y2="9.5"/><line x1="3" y1="14.5" x2="7" y2="14.5"/><line x1="17" y1="9.5" x2="21" y2="9.5"/><line x1="17" y1="14.5" x2="21" y2="14.5"/>',
+    ece385: '<path d="M3 13 H7.5 V6 H13.5 V18 H17.5 V13 H21"/>',
+    aml: '<circle cx="5.5" cy="6" r="1.8"/><circle cx="5.5" cy="12" r="1.8"/><circle cx="5.5" cy="18" r="1.8"/><circle cx="18.5" cy="9" r="1.8"/><circle cx="18.5" cy="15" r="1.8"/><line x1="7.1" y1="6.6" x2="16.9" y2="8.6"/><line x1="7.1" y1="11.3" x2="16.9" y2="9.4"/><line x1="7.1" y1="12.7" x2="16.9" y2="14.6"/><line x1="7.1" y1="17.4" x2="16.9" y2="15.4"/>',
+    robotics: '<line x1="4" y1="20" x2="10" y2="20"/><line x1="10" y1="20" x2="14" y2="10"/><line x1="14" y1="10" x2="20" y2="7"/><circle cx="10" cy="20" r="1.7"/><circle cx="14" cy="10" r="1.7"/><rect x="18.3" y="4.3" width="4.5" height="4.5" rx="1"/>',
+    interview: '<rect x="4" y="9" width="16" height="11" rx="1.6"/><path d="M9 9V6.5A1.5 1.5 0 0 1 10.5 5h3A1.5 1.5 0 0 1 15 6.5V9"/><line x1="4" y1="14.5" x2="20" y2="14.5"/>'
+  };
+  function iconSvg(name, cls) {
+    return '<svg class="' + (cls || "") + '" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + ICONS[name] + '</svg>';
+  }
+  function ringSvg(pct, size, stroke) {
+    var r = (size - stroke) / 2;
+    var c = 2 * Math.PI * r;
+    var off = c * (1 - pct / 100);
+    var mid = size / 2;
+    return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '">' +
+      '<circle cx="' + mid + '" cy="' + mid + '" r="' + r + '" fill="none" stroke="var(--surface-2)" stroke-width="' + stroke + '"/>' +
+      '<circle cx="' + mid + '" cy="' + mid + '" r="' + r + '" fill="none" stroke="var(--accent)" stroke-width="' + stroke + '" stroke-linecap="round" stroke-dasharray="' + c + '" stroke-dashoffset="' + off + '" transform="rotate(-90 ' + mid + ' ' + mid + ')"/>' +
+      '</svg>';
+  }
+
+  var SECTIONS = [
+    {
+      id: "cs225", code: "CS 225", name: "Data Structures", icon: "cs225",
+      blurb: "Core data structures and algorithms: complexity analysis, trees, hashing, graphs, and sorting — the backbone of every technical screen.",
+      topics: [
+        ["Asymptotics", "Compare algorithms by worst-case growth rate, not raw speed on one input."],
+        ["Trees", "Balanced trees keep height O(log n); an unbalanced BST degrades to a linked list."],
+        ["Hashing", "Load factor α = n / m drives when a hash table needs to resize."],
+        ["Graphs", "BFS explores by distance; DFS explores by depth. Pick based on what you need."],
+        ["Shortest paths / MST", "Dijkstra needs non-negative weights; Bellman-Ford tolerates negative edges."],
+        ["Sorting", "Comparison sorts have an O(n log n) floor; know which are stable and in-place."]
+      ],
+      questions: [
+        { id:1, topic:"Asymptotics", type:"mcq",
+          prompt:"What is the time complexity of inserting into a balanced AVL tree with n nodes?",
+          options:["O(1)","O(log n)","O(n)","O(n log n)"], answer:1,
+          explain:"AVL trees rebalance via rotations to guarantee height O(log n), so insertion (find spot + rebalance) is O(log n)." },
+        { id:2, topic:"Trees", type:"short",
+          prompt:"In a min-heap stored as a 0-indexed array, if a node sits at index i, at what index is its left child?",
+          answer:"2i + 1",
+          explain:"Array-backed binary heaps use i → 2i+1 (left) and 2i+2 (right); the parent of index i is (i−1)/2." },
+        { id:3, topic:"Hashing", type:"short",
+          prompt:"A separate-chaining hash table holds 1000 entries across 1500 slots. What is its load factor α (to 2 decimal places)?",
+          answer:"0.67",
+          explain:"α = n/m = 1000/1500 ≈ 0.67. Average chain length under simple uniform hashing is roughly α." },
+        { id:4, topic:"Shortest paths / MST", type:"mcq",
+          prompt:"Which algorithm correctly finds shortest paths in a graph with negative edge weights but no negative cycles?",
+          options:["Dijkstra's algorithm","Bellman-Ford","Plain BFS","Prim's algorithm"], answer:1,
+          explain:"Dijkstra's greedy choice breaks with negative edges. Bellman-Ford relaxes all edges V−1 times and handles negative weights correctly." },
+        { id:5, topic:"Shortest paths / MST", type:"short",
+          prompt:"Kruskal's algorithm needs to detect whether adding an edge would form a cycle. Which data structure does it use for that check in near O(1) amortized time?",
+          answer:"Disjoint Set / Union-Find",
+          explain:"Union-Find with union-by-rank and path compression makes cycle detection nearly constant time per edge, giving Kruskal's its O(E log E) total." },
+        { id:6, topic:"Sorting", type:"mcq",
+          prompt:"Which sort has O(n log n) average-case time but is NOT stable in its typical in-place implementation?",
+          options:["Merge sort","Quicksort","Insertion sort","Bubble sort"], answer:1,
+          explain:"In-place quicksort swaps across partitions, which can reorder equal keys. Merge sort is stable; insertion/bubble sort are O(n²)." },
+        { id:7, topic:"Trees", type:"short",
+          prompt:"You build a BST by inserting an already-sorted array in order, with no rebalancing. What is the resulting tree's height, in terms of n?",
+          answer:"O(n)",
+          explain:"Sorted input with no rebalancing degenerates the BST into a linked list — height O(n), and search/insert drop to O(n) too." },
+        { id:8, topic:"Graphs", type:"short",
+          prompt:"Name the tree traversal order that visits: left subtree, then root, then right subtree.",
+          answer:"Inorder",
+          explain:"Inorder traversal of a BST visits nodes in ascending sorted order — useful for validating BST property." }
+      ]
+    },
+    {
+      id: "ece391", code: "ECE 391", name: "Computer Systems Engineering", icon: "ece391",
+      blurb: "Kernel-level systems: x86 protected mode, paging, interrupts, scheduling, and device drivers — the material behind the MP kernel.",
+      topics: [
+        ["Paging", "Virtual addresses split into directory / table / offset bits; CR3 points to the page directory."],
+        ["Interrupts", "The IDT maps vector numbers to handlers for exceptions, hardware IRQs, and syscalls."],
+        ["Privilege rings", "Ring 0 is kernel mode with full hardware access; ring 3 is unprivileged user mode."],
+        ["Processes", "A PCB stores per-process register state, PID, and page directory pointer for context switches."],
+        ["Scheduling", "Round robin gives each process a fixed time quantum before preempting to the next."],
+        ["Device drivers", "Interrupt-driven I/O avoids busy-waiting; polling wastes CPU cycles checking device status."]
+      ],
+      questions: [
+        { id:1, topic:"Paging", type:"short",
+          prompt:"With 4 KB pages and a 32-bit virtual address, how many bits encode the page offset?",
+          answer:"12 bits",
+          explain:"4 KB = 2^12 bytes, so the low 12 bits address a byte within the page; the remaining 20 bits index directory/table entries." },
+        { id:2, topic:"Interrupts", type:"mcq",
+          prompt:"Which x86 structure holds the entry points for interrupt and exception handlers?",
+          options:["GDT","IDT","TSS","PDBR"], answer:1,
+          explain:"The Interrupt Descriptor Table (IDT) maps each interrupt vector to a handler's gate descriptor. The GDT describes segments; the TSS holds task state." },
+        { id:3, topic:"Privilege rings", type:"short",
+          prompt:"What x86 privilege ring does kernel code run in?",
+          answer:"Ring 0",
+          explain:"Ring 0 has unrestricted access to hardware and privileged instructions; user programs typically run in ring 3." },
+        { id:4, topic:"Interrupts", type:"mcq",
+          prompt:"Classic x86 Linux (and the ECE 391 kernel) invoke system calls via which mechanism?",
+          options:["A direct CALL instruction","A software interrupt (e.g. INT 0x80)","Reading a memory-mapped register","Triggering a page fault"], answer:1,
+          explain:"User code raises a software interrupt, trapping into ring 0 through a gate the kernel installed in the IDT, which dispatches to the syscall handler." },
+        { id:5, topic:"Processes", type:"short",
+          prompt:"What per-process structure stores register state, PID, and page directory pointer so the OS can context switch?",
+          answer:"Process Control Block (PCB)",
+          explain:"The PCB is the kernel's bookkeeping record for a process — everything needed to save/restore execution state on a switch." },
+        { id:6, topic:"Paging", type:"short",
+          prompt:"What does the x86 CR3 register (Page Directory Base Register) hold?",
+          answer:"The physical address of the current process's page directory",
+          explain:"The CPU's paging hardware walks the page directory pointed to by CR3 to translate every virtual address the process touches." },
+        { id:7, topic:"Scheduling", type:"short",
+          prompt:"In round-robin scheduling, what fixed resource does each process get before being preempted?",
+          answer:"A time quantum (fixed time slice)",
+          explain:"Round robin cycles through the ready queue, giving each process one quantum of CPU time — simple and starvation-free, at the cost of context-switch overhead." },
+        { id:8, topic:"Device drivers", type:"short",
+          prompt:"Give one reason a device driver (e.g. the RTC or keyboard) is built around interrupts rather than polling.",
+          answer:"Interrupts avoid wasting CPU cycles busy-waiting on a device that is idle most of the time.",
+          explain:"Polling burns CPU checking a status register repeatedly; interrupts let the CPU do other work and only react when the device actually has data." }
+      ]
+    },
+    {
+      id: "ece385", code: "ECE 385", name: "Digital Systems Lab", icon: "ece385",
+      blurb: "Combinational and sequential logic, SystemVerilog, and FPGA timing — the building blocks behind every digital design lab.",
+      topics: [
+        ["Boolean logic", "Simplify with K-maps or algebraic identities before committing to gates."],
+        ["Flip-flops", "A D flip-flop samples D and updates Q only at the active clock edge."],
+        ["FSMs", "Moore outputs depend only on state; Mealy outputs depend on state and input."],
+        ["HDL", "always_ff models clocked (sequential) logic; always_comb models combinational logic."],
+        ["Number systems", "Two's complement negates a value by inverting bits and adding 1."],
+        ["Timing", "Setup time is how long data must be stable before the clock edge that captures it."]
+      ],
+      questions: [
+        { id:1, topic:"Boolean logic", type:"short",
+          prompt:"Simplify: F = AB + AB′ (B′ is NOT B).",
+          answer:"F = A",
+          explain:"AB + AB′ = A(B + B′) = A · 1 = A — factoring out A leaves B + B′, which is always true." },
+        { id:2, topic:"Flip-flops", type:"mcq",
+          prompt:"A D flip-flop's output Q updates to match D at:",
+          options:["Any moment D changes","The active clock edge","Whenever reset is asserted","Continuously, like a wire"], answer:1,
+          explain:"That's what makes it edge-triggered and synchronous — Q only changes at the clock edge, isolating the circuit from glitches between edges." },
+        { id:3, topic:"FSMs", type:"short",
+          prompt:"In a Moore finite state machine, the output depends only on what?",
+          answer:"The current state",
+          explain:"Mealy machines, by contrast, let outputs depend on both state and current input — which can react faster but is more prone to glitches." },
+        { id:4, topic:"HDL", type:"short",
+          prompt:"Which SystemVerilog always-block keyword should you use to model a synchronous, clocked (flip-flop-based) process?",
+          answer:"always_ff",
+          explain:"always_ff (paired with @(posedge clk)) tells synthesis this block is sequential logic; always_comb is for combinational logic with no memory." },
+        { id:5, topic:"Number systems", type:"short",
+          prompt:"What is −5 in 8-bit two's complement, written in binary?",
+          answer:"11111011",
+          explain:"Take +5 (00000101), invert all bits (11111010), then add 1 → 11111011." },
+        { id:6, topic:"Timing", type:"mcq",
+          prompt:"A setup time violation happens when:",
+          options:["The clock runs too slow","Data doesn't stabilize long enough before the active clock edge","Data changes right after the clock edge","Reset is asserted mid-cycle"], answer:1,
+          explain:"Setup time is the minimum window data must be stable before the capturing clock edge. Violate it and the flip-flop can sample garbage or go metastable." },
+        { id:7, topic:"Flip-flops", type:"short",
+          prompt:"What is the minimum number of flip-flops needed for a synchronous binary counter that counts 0 through 15?",
+          answer:"4",
+          explain:"4 bits give 2^4 = 16 distinct states (0–15) — exactly enough, with no wasted states." },
+        { id:8, topic:"Boolean logic", type:"short",
+          prompt:"What does FPGA stand for?",
+          answer:"Field-Programmable Gate Array",
+          explain:"An FPGA is reconfigurable logic fabric — look-up tables and flip-flops wired together after fabrication to implement whatever circuit you synthesize." }
+      ]
+    },
+    {
+      id: "aml", code: "AML", name: "Applied Machine Learning", icon: "aml",
+      blurb: "Regression, regularization, ensembles, and neural nets — the practical modeling toolkit and how to evaluate it honestly.",
+      topics: [
+        ["Regularization", "L2 (ridge) penalizes the sum of squared weights, shrinking them toward zero."],
+        ["Bias-variance", "High bias underfits; high variance overfits. Regularization trades one for the other."],
+        ["Ensembles", "Random forests reduce variance by averaging many decorrelated, bootstrap-trained trees."],
+        ["Neural nets", "ReLU is the default hidden-layer activation — cheap, and it avoids vanishing gradients better than sigmoid."],
+        ["Evaluation", "Precision and recall trade off; ROC-AUC summarizes performance across all thresholds."],
+        ["Unsupervised", "PCA finds directions of maximum variance; it's a projection, not a classifier."]
+      ],
+      questions: [
+        { id:1, topic:"Regularization", type:"mcq",
+          prompt:"L2 regularization (ridge regression) adds which penalty term to the loss function?",
+          options:["Sum of |weights|","Sum of squared weights","Sum of weights","Max absolute weight"], answer:1,
+          explain:"Ridge adds λΣw². L1 (lasso) uses Σ|w| instead, and tends to push weights exactly to zero (sparsity), which L2 does not." },
+        { id:2, topic:"Bias-variance", type:"short",
+          prompt:"A model with high bias and low variance is typically described as doing what?",
+          answer:"Underfitting",
+          explain:"It's too simple to capture the underlying pattern — consistently wrong in a similar way across different training sets." },
+        { id:3, topic:"Ensembles", type:"mcq",
+          prompt:"A random forest reduces variance primarily by:",
+          options:["Increasing each tree's max depth","Averaging predictions across many bootstrap-sampled, decorrelated trees","Applying gradient boosting","Removing all regularization"], answer:1,
+          explain:"Bagging (bootstrap aggregating) plus random feature subsets decorrelates the trees, so averaging them cancels out individual trees' noise." },
+        { id:4, topic:"Neural nets", type:"short",
+          prompt:"Name the activation function most commonly used in hidden layers of modern deep networks to help avoid vanishing gradients.",
+          answer:"ReLU (Rectified Linear Unit)",
+          explain:"ReLU's gradient is 1 for positive inputs (no saturation/shrinking gradient), unlike sigmoid or tanh which saturate at the extremes." },
+        { id:5, topic:"Evaluation", type:"short",
+          prompt:"For a binary classifier, Precision = TP / (TP + ___). Fill in the blank.",
+          answer:"FP (false positives)",
+          explain:"Precision asks: of everything I predicted positive, how much was actually positive? Recall instead divides by TP + FN." },
+        { id:6, topic:"Unsupervised", type:"mcq",
+          prompt:"Principal Component Analysis (PCA) finds directions that maximize:",
+          options:["Classification accuracy","The variance of the projected data","Distance between class clusters","Sparsity of the weight vector"], answer:1,
+          explain:"PCA is unsupervised — it doesn't know about labels. It just finds the orthogonal axes that capture the most variance in the data." },
+        { id:7, topic:"Bias-variance", type:"short",
+          prompt:"Why keep a validation set separate from the test set, instead of just tuning hyperparameters directly against the test set?",
+          answer:"So the test set stays an unbiased, final estimate of generalization performance",
+          explain:"If you tune on the test set, you leak information into your model choices and the test score stops reflecting true out-of-sample performance." },
+        { id:8, topic:"Regularization", type:"short",
+          prompt:"Name one technique (besides L2 regularization) used to prevent overfitting in a neural network.",
+          answer:"Dropout, early stopping, or data augmentation (any one)",
+          explain:"Dropout randomly zeroes activations during training so the network can't over-rely on any single neuron; early stopping halts training once validation loss stops improving." }
+      ]
+    },
+    {
+      id: "robotics", code: "ROBOTICS", name: "Robotics", icon: "robotics",
+      blurb: "Kinematics, control, planning, and estimation — how a robot figures out where it is, where to go, and how to move there.",
+      topics: [
+        ["Kinematics", "Forward kinematics: joint angles → end-effector pose. Inverse: pose → joint angles (often multiple solutions)."],
+        ["Control", "PID: proportional reacts to error, integral kills steady-state error, derivative damps overshoot."],
+        ["Path planning", "A* adds a heuristic to Dijkstra's search to steer expansion toward the goal."],
+        ["Sampling-based planning", "RRT grows a random tree through configuration space — built for high-dimensional, continuous spaces."],
+        ["State estimation", "A Kalman filter fuses a motion-model prediction with a noisy measurement, weighted by their uncertainties."],
+        ["Transforms", "Rotation matrices are orthogonal: transpose equals inverse, determinant is 1."]
+      ],
+      questions: [
+        { id:1, topic:"Kinematics", type:"mcq",
+          prompt:"Forward kinematics computes:",
+          options:["Joint angles from a target end-effector position","End-effector position from known joint angles","Motor torque from velocity","Sensor noise covariance"], answer:1,
+          explain:"Forward kinematics is a straightforward function of joint angles → pose via the chain of transforms. Inverse kinematics goes the other direction and is harder." },
+        { id:2, topic:"Kinematics", type:"short",
+          prompt:"Why can inverse kinematics have multiple valid solutions for the same target end-effector pose?",
+          answer:"Redundant or multiple joint configurations can reach the same pose (e.g. elbow-up vs. elbow-down)",
+          explain:"A manipulator often has more than one way to bend its joints and still place the end-effector at the same point — IK has to choose among them." },
+        { id:3, topic:"Control", type:"short",
+          prompt:"In a PID controller, which term primarily eliminates steady-state error?",
+          answer:"The integral term",
+          explain:"The integral accumulates past error over time, so even a small persistent error keeps growing the correction until it's driven to zero." },
+        { id:4, topic:"Control", type:"short",
+          prompt:"What does the derivative term in a PID controller respond to, and what's its practical effect?",
+          answer:"The rate of change of error; it damps oscillation and overshoot",
+          explain:"By reacting to how fast the error is changing, the D term applies braking force before the system overshoots the setpoint." },
+        { id:5, topic:"Path planning", type:"mcq",
+          prompt:"A* search differs from Dijkstra's algorithm by:",
+          options:["Not using a priority queue","Using a heuristic estimate of distance to the goal to guide expansion","Only working on unweighted graphs","Sampling random configurations"], answer:1,
+          explain:"A* = Dijkstra + an admissible heuristic h(n). It expands nodes in order of f(n) = g(n) + h(n), which biases search toward the goal instead of expanding uniformly outward." },
+        { id:6, topic:"Sampling-based planning", type:"short",
+          prompt:"What is RRT (Rapidly-exploring Random Tree) primarily used for?",
+          answer:"Motion / path planning in continuous or high-dimensional configuration space",
+          explain:"RRT incrementally grows a tree toward randomly sampled points, making it effective where explicit grid search (like A*) becomes intractable." },
+        { id:7, topic:"State estimation", type:"short",
+          prompt:"What two things does a Kalman filter combine to produce its state estimate?",
+          answer:"A motion-model prediction and a sensor measurement, weighted by their respective uncertainties",
+          explain:"The predict step propagates the state forward; the update step corrects it using a new measurement, blended via the Kalman gain based on relative confidence." },
+        { id:8, topic:"Transforms", type:"short",
+          prompt:"What key algebraic property do all valid 3D rotation matrices share?",
+          answer:"They are orthogonal (transpose = inverse) with determinant +1",
+          explain:"Orthogonality preserves lengths and angles — exactly what a pure rotation should do, with no scaling or reflection." }
+      ]
+    }
+  ];
+
+  var INTERVIEW = {
+    id: "interview", code: "PREP", name: "Interview & OA", icon: "interview",
+    blurb: "Behavioral prompts, technical patterns, and online-assessment strategy — the non-course half of getting an offer.",
+    behavioral: [
+      { q:"Tell me about a time you disagreed with a teammate.", tip:"Use STAR: Situation, Task, Action, Result. Name the disagreement concretely, focus on how you resolved it, and end on the outcome — not on who was \"right.\"" },
+      { q:"Describe a project where you had to learn something new quickly.", tip:"Pick something specific to a system or tool, not \"I learned fast in general.\" Show your process for getting up to speed, not just the fact that you did." },
+      { q:"Tell me about a time you made a mistake and how you handled it.", tip:"Own the mistake plainly, no deflecting. Interviewers are listening for ownership and what changed afterward, not for a flawless track record." },
+      { q:"Describe a time you had a tight deadline and limited resources.", tip:"Be concrete about the tradeoff you made (scope, quality, or time) and why — that judgment call is usually the actual point of the question." },
+      { q:"Tell me about a time you had to influence someone without direct authority.", tip:"Focus on how you built the case — data, demos, or aligning to their incentives — rather than persistence alone." }
+    ],
+    technical: [
+      { id:1, topic:"Two pointers", type:"short",
+        prompt:"Which technique solves “find a pair in a sorted array that sums to a target” in O(n) time and O(1) extra space?",
+        answer:"Two pointers (one from each end, moving inward)",
+        explain:"Because the array is sorted, moving the low pointer up or the high pointer down in response to the current sum lets you scan once instead of checking all pairs." },
+      { id:2, topic:"Sliding window", type:"short",
+        prompt:"Sliding window is the go-to technique for which class of problems?",
+        answer:"Contiguous subarray / substring problems (e.g. longest substring under a constraint, max sum subarray)",
+        explain:"Instead of recomputing from scratch, you incrementally add/remove elements at the window's edges — turning an O(n²) brute force into O(n)." },
+      { id:3, topic:"Dynamic programming", type:"short",
+        prompt:"What's the time complexity of a standard DP solution to 0/1 knapsack with n items and capacity W?",
+        answer:"O(n × W)",
+        explain:"The DP table has n rows and W+1 columns, each filled in O(1) from previously computed entries — pseudo-polynomial because it depends on W's magnitude, not just item count." },
+      { id:4, topic:"Graph search", type:"short",
+        prompt:"When do you reach for BFS instead of DFS?",
+        answer:"When you need the shortest path in an unweighted graph",
+        explain:"BFS explores in increasing distance from the source, so the first time it reaches a node is guaranteed to be via a shortest path." },
+      { id:5, topic:"Recursion", type:"short",
+        prompt:"Naive recursive Fibonacci is O(2^n) time. What does memoizing it change the time and space complexity to?",
+        answer:"O(n) time, O(n) space",
+        explain:"Memoization caches each subproblem's result so it's computed once; you trade the exponential blowup for linear time at the cost of linear storage." }
+    ],
+    systemDesign: [
+      { q:"What's the difference between vertical and horizontal scaling?", tip:"Vertical = bigger machine (more CPU/RAM on one box, simple but has a ceiling). Horizontal = more machines (needs load balancing and often a rethink of state, but scales further)." },
+      { q:"Why put a load balancer in front of your servers?", tip:"Distributes traffic across instances, enables rolling deploys and health-check-based failover, and lets you scale horizontally without clients caring which instance answers." },
+      { q:"What is the cache-aside pattern?", tip:"App checks the cache first; on a miss, it reads from the database and writes the result into the cache before returning it. Simple, and the cache only ever holds what's actually been requested." }
+    ],
+    checklist: [
+      "Read every question before writing code — pick off the easiest one first to bank points.",
+      "State and test your assumptions about input size, duplicates, and edge cases (empty input, single element, negatives) before you assume the happy path.",
+      "Talk (or comment) through your approach before typing — many OAs and interviews grade partial credit on reasoning, not just a passing test suite.",
+      "Trace through one example by hand before you trust the code compiles correctly in your head.",
+      "Watch the clock: if you're stuck past ~15–20 minutes on one part, submit your best partial solution and move on — you can return if time remains.",
+      "For timed OAs, know the platform beforehand (HackerRank, CodeSignal, Karat) so the UI itself doesn't cost you time on test day."
+    ]
+  };
+
+  // ---------------- State ----------------
+  function loadProgress() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) { return {}; }
+  }
+  function saveProgress(state) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+  var progress = loadProgress();
+
+  function setStatus(key, status) {
+    progress[key] = status;
+    saveProgress(progress);
+    renderSidebar();
+  }
+
+  function allSections() { return SECTIONS.concat([INTERVIEW]); }
+
+  function sectionQuestionIds(section) {
+    var ids = [];
+    if (section.questions) section.questions.forEach(function (q) { ids.push(section.id + "-" + q.id); });
+    if (section.technical) section.technical.forEach(function (q) { ids.push(section.id + "-t" + q.id); });
+    return ids;
+  }
+  function sectionStats(section) {
+    var ids = sectionQuestionIds(section);
+    var correct = 0, answered = 0;
+    ids.forEach(function (k) {
+      if (progress[k] === "correct") { correct++; answered++; }
+      else if (progress[k] === "incorrect") { answered++; }
+    });
+    return { total: ids.length, answered: answered, correct: correct };
+  }
+
+  // ---------------- Sidebar ----------------
+  var navlist = document.getElementById("navlist");
+  var overallEyebrow = document.getElementById("overallEyebrow");
+
+  function renderSidebar() {
+    var hash = location.hash.replace("#/", "") || "home";
+    navlist.innerHTML = "";
+
+    navlist.appendChild(makeNavlink("home", "home", "Home", "Overview", null, hash === "home"));
+
+    var groupLabel = document.createElement("div");
+    groupLabel.className = "nav-group-label";
+    groupLabel.textContent = "Coursework";
+    navlist.appendChild(groupLabel);
+
+    var totalAll = 0, correctAll = 0;
+    SECTIONS.forEach(function (s) {
+      var stats = sectionStats(s);
+      totalAll += stats.total; correctAll += stats.correct;
+      navlist.appendChild(makeNavlink(s.id, s.icon, s.code, s.name, stats, hash === s.id));
+    });
+
+    var groupLabel2 = document.createElement("div");
+    groupLabel2.className = "nav-group-label";
+    groupLabel2.textContent = "Beyond coursework";
+    navlist.appendChild(groupLabel2);
+
+    var iStats = sectionStats(INTERVIEW);
+    totalAll += iStats.total; correctAll += iStats.correct;
+    navlist.appendChild(makeNavlink(INTERVIEW.id, INTERVIEW.icon, INTERVIEW.code, INTERVIEW.name, iStats, hash === INTERVIEW.id));
+
+    overallEyebrow.textContent = correctAll + " / " + totalAll + " reviewed";
+  }
+
+  function makeNavlink(id, icon, code, name, stats, active) {
+    var a = document.createElement("a");
+    a.href = "#/" + id;
+    a.className = "navlink" + (active ? " active" : "");
+    var html = iconSvg(icon, "nicon") +
+      '<span class="navlink-text"><span class="navlink-name">' + code + '</span><span class="navlink-sub">' + name + '</span></span>';
+    if (stats) html += '<span class="navbadge mono">' + stats.correct + '/' + stats.total + '</span>';
+    a.innerHTML = html;
+    return a;
+  }
+
+  document.getElementById("resetBtn").addEventListener("click", function () {
+    if (confirm("Reset all saved progress? This clears every answered question.")) {
+      progress = {};
+      saveProgress(progress);
+      renderSidebar();
+      route();
+    }
+  });
+
+  // ---------------- Rendering: questions ----------------
+  function renderQuestionCard(q, sectionId, keySuffix) {
+    var key = sectionId + "-" + (keySuffix || q.id);
+    var state = progress[key];
+    var card = document.createElement("div");
+    card.className = "qcard";
+    if (state) card.setAttribute("data-state", state);
+
+    var meta = document.createElement("div");
+    meta.className = "qmeta";
+    meta.innerHTML =
+      '<span class="qnum mono">' + String(q.id).padStart(2, "0") + '</span>' +
+      '<span class="qtopic">' + q.topic + '</span>' +
+      '<span class="qstatus">' + (state === "correct" ? "✓ Correct" : state === "incorrect" ? "✗ Missed" : "") + '</span>';
+    card.appendChild(meta);
+
+    var prompt = document.createElement("p");
+    prompt.className = "qprompt";
+    prompt.textContent = q.prompt;
+    card.appendChild(prompt);
+
+    if (q.type === "mcq") {
+      var opts = document.createElement("div");
+      opts.className = "options";
+      q.options.forEach(function (optText, idx) {
+        var btn = document.createElement("button");
+        btn.className = "opt";
+        btn.innerHTML = '<span class="optdot"></span><span>' + optText + '</span>';
+        if (state) {
+          btn.disabled = true;
+          if (idx === q.answer) btn.classList.add("correct");
+          else if (progress[key + "-picked"] == idx) btn.classList.add("wrong");
+        }
+        btn.addEventListener("click", function () {
+          var correct = idx === q.answer;
+          progress[key + "-picked"] = idx;
+          setStatus(key, correct ? "correct" : "incorrect");
+          rerenderCurrent();
+        });
+        opts.appendChild(btn);
+      });
+      card.appendChild(opts);
+
+      var explain = document.createElement("div");
+      explain.className = "explain-block" + (state ? " show" : "");
+      explain.innerHTML = '<p>' + q.explain + '</p>';
+      card.appendChild(explain);
+    } else {
+      var answerBox = document.createElement("div");
+      answerBox.className = "answer-box" + (state ? " show" : "");
+      answerBox.innerHTML =
+        '<span class="ans-label">Answer</span>' +
+        '<p class="ans-text">' + q.answer + '</p>' +
+        '<p class="explain">' + q.explain + '</p>';
+
+      var row = document.createElement("div");
+      row.className = "short-row";
+
+      if (!state) {
+        var revealBtn = document.createElement("button");
+        revealBtn.className = "btn primary";
+        revealBtn.textContent = "Reveal answer";
+        revealBtn.addEventListener("click", function () {
+          answerBox.classList.add("show");
+          revealBtn.style.display = "none";
+          gotBtn.style.display = "inline-block";
+          missBtn.style.display = "inline-block";
+        });
+
+        var gotBtn = document.createElement("button");
+        gotBtn.className = "btn good";
+        gotBtn.textContent = "I had it";
+        gotBtn.style.display = "none";
+        gotBtn.addEventListener("click", function () { setStatus(key, "correct"); rerenderCurrent(); });
+
+        var missBtn = document.createElement("button");
+        missBtn.className = "btn bad";
+        missBtn.textContent = "I missed it";
+        missBtn.style.display = "none";
+        missBtn.addEventListener("click", function () { setStatus(key, "incorrect"); rerenderCurrent(); });
+
+        row.appendChild(revealBtn);
+        row.appendChild(gotBtn);
+        row.appendChild(missBtn);
+      } else {
+        var again = document.createElement("button");
+        again.className = "btn";
+        again.textContent = state === "correct" ? "Mark as missed instead" : "Mark as had-it instead";
+        again.addEventListener("click", function () {
+          setStatus(key, state === "correct" ? "incorrect" : "correct");
+          rerenderCurrent();
+        });
+        row.appendChild(again);
+      }
+
+      card.appendChild(row);
+      card.appendChild(answerBox);
+    }
+
+    return card;
+  }
+
+  // ---------------- Rendering: course section ----------------
+  function renderCourseSection(section) {
+    var main = document.getElementById("main");
+    main.innerHTML = "";
+
+    var head = document.createElement("div");
+    head.className = "section-head";
+    head.innerHTML =
+      '<div class="section-head-icon">' + iconSvg(section.icon) + '</div>' +
+      '<div class="section-head-text">' +
+        '<span class="eyebrow">Course review · ' + section.code + '</span>' +
+        '<h1>' + section.name + '</h1>' +
+        '<p class="blurb">' + section.blurb + '</p>' +
+      '</div>';
+    main.appendChild(head);
+
+    var ki = document.createElement("div");
+    ki.className = "keyideas";
+    section.topics.forEach(function (t) {
+      var div = document.createElement("div");
+      div.className = "keyidea";
+      div.innerHTML = '<span class="topic">' + t[0] + '</span><p>' + t[1] + '</p>';
+      ki.appendChild(div);
+    });
+    main.appendChild(ki);
+
+    var qlist = document.createElement("div");
+    qlist.className = "qlist";
+    section.questions.forEach(function (q) {
+      qlist.appendChild(renderQuestionCard(q, section.id));
+    });
+    main.appendChild(qlist);
+  }
+
+  // ---------------- Rendering: interview ----------------
+  function renderInterview() {
+    var main = document.getElementById("main");
+    main.innerHTML = "";
+
+    var head = document.createElement("div");
+    head.className = "section-head";
+    head.innerHTML =
+      '<div class="section-head-icon">' + iconSvg(INTERVIEW.icon) + '</div>' +
+      '<div class="section-head-text">' +
+        '<span class="eyebrow">' + INTERVIEW.code + '</span>' +
+        '<h1>' + INTERVIEW.name + '</h1>' +
+        '<p class="blurb">' + INTERVIEW.blurb + '</p>' +
+      '</div>';
+    main.appendChild(head);
+
+    var g1 = document.createElement("h2");
+    g1.className = "group-title";
+    g1.textContent = "Behavioral prompts";
+    var g1s = document.createElement("p");
+    g1s.className = "group-sub";
+    g1s.textContent = "No auto-grading here — these are prompts to rehearse out loud. Structure answers with STAR: Situation, Task, Action, Result.";
+    main.appendChild(g1); main.appendChild(g1s);
+
+    var plist = document.createElement("div");
+    plist.className = "prompt-list";
+    INTERVIEW.behavioral.forEach(function (b) {
+      var c = document.createElement("div");
+      c.className = "prompt-card";
+      c.innerHTML = '<p class="pq">' + b.q + '</p><p class="ptip">' + b.tip + '</p>';
+      plist.appendChild(c);
+    });
+    main.appendChild(plist);
+
+    var g2 = document.createElement("h2");
+    g2.className = "group-title";
+    g2.textContent = "Technical patterns";
+    var g2s = document.createElement("p");
+    g2s.className = "group-sub";
+    g2s.textContent = "The recurring patterns behind most DSA-style OA and interview questions.";
+    main.appendChild(g2); main.appendChild(g2s);
+
+    var qlist = document.createElement("div");
+    qlist.className = "qlist";
+    INTERVIEW.technical.forEach(function (q) {
+      qlist.appendChild(renderQuestionCard(q, INTERVIEW.id, "t" + q.id));
+    });
+    main.appendChild(qlist);
+
+    var g3 = document.createElement("h2");
+    g3.className = "group-title";
+    g3.textContent = "System design basics";
+    var g3s = document.createElement("p");
+    g3s.className = "group-sub";
+    g3s.textContent = "New-grad-level system design rarely goes deep — it checks that you know the basic vocabulary.";
+    main.appendChild(g3); main.appendChild(g3s);
+
+    var plist2 = document.createElement("div");
+    plist2.className = "prompt-list";
+    INTERVIEW.systemDesign.forEach(function (b) {
+      var c = document.createElement("div");
+      c.className = "prompt-card";
+      c.innerHTML = '<p class="pq">' + b.q + '</p><p class="ptip">' + b.tip + '</p>';
+      plist2.appendChild(c);
+    });
+    main.appendChild(plist2);
+
+    var g4 = document.createElement("h2");
+    g4.className = "group-title";
+    g4.textContent = "Online assessment checklist";
+    var g4s = document.createElement("p");
+    g4s.className = "group-sub";
+    g4s.textContent = "Run through this before you click \"start\" on a timed OA.";
+    main.appendChild(g4); main.appendChild(g4s);
+
+    var ul = document.createElement("ul");
+    ul.className = "checklist";
+    INTERVIEW.checklist.forEach(function (item, i) {
+      var li = document.createElement("li");
+      li.innerHTML = '<span class="mark mono">' + (i + 1) + '</span><span>' + item + '</span>';
+      ul.appendChild(li);
+    });
+    main.appendChild(ul);
+  }
+
+  // ---------------- Rendering: home ----------------
+  function renderHome() {
+    var main = document.getElementById("main");
+    main.innerHTML = "";
+
+    var all = allSections();
+    var totalAll = 0, correctAll = 0;
+    all.forEach(function (s) { var st = sectionStats(s); totalAll += st.total; correctAll += st.correct; });
+    var pct = totalAll ? Math.round((correctAll / totalAll) * 100) : 0;
+
+    var hero = document.createElement("div");
+    hero.className = "hero";
+    hero.innerHTML =
+      '<div>' +
+        '<span class="eyebrow">Review hub</span>' +
+        '<h1>Everything before it ships.</h1>' +
+        '<p>Course review for CS 225, ECE 391, ECE 385, Applied ML, and Robotics, plus a dedicated pass for interviews and OAs. Progress saves in this browser as you go.</p>' +
+      '</div>' +
+      '<div class="hero-ring"><div class="ring-wrap">' + ringSvg(pct, 88, 9) +
+        '<span class="ring-pct" style="color:white;font-size:17px;">' + pct + '%</span></div></div>';
+    main.appendChild(hero);
+
+    var grid = document.createElement("div");
+    grid.className = "home-grid";
+    all.forEach(function (s) {
+      var stats = sectionStats(s);
+      var pct2 = stats.total ? Math.round((stats.correct / stats.total) * 100) : 0;
+      var card = document.createElement("a");
+      card.href = "#/" + s.id;
+      card.className = "home-card";
+      card.innerHTML =
+        '<div class="home-card-top">' +
+          '<div class="home-card-icon">' + iconSvg(s.icon) + '</div>' +
+          '<div><div class="hc-code">' + s.code + '</div><p class="hc-name">' + s.name + '</p></div>' +
+        '</div>' +
+        '<p class="hc-desc">' + s.blurb + '</p>' +
+        '<div class="home-card-bottom">' +
+          '<div class="ring-wrap">' + ringSvg(pct2, 40, 4) + '<span class="ring-pct" style="color:var(--ink);font-size:10px;">' + pct2 + '%</span></div>' +
+          '<span class="hc-stat">' + stats.correct + ' / ' + stats.total + ' correct</span>' +
+        '</div>';
+      grid.appendChild(card);
+    });
+    main.appendChild(grid);
+  }
+
+  // ---------------- Router ----------------
+  function route() {
+    var hash = location.hash.replace("#/", "") || "home";
+    if (hash === "home") {
+      renderHome();
+    } else if (hash === INTERVIEW.id) {
+      renderInterview();
+    } else {
+      var section = SECTIONS.filter(function (s) { return s.id === hash; })[0];
+      if (section) renderCourseSection(section);
+      else renderHome();
+    }
+    renderSidebar();
+    window.scrollTo(0, 0);
+  }
+  function rerenderCurrent() { route(); }
+
+  window.addEventListener("hashchange", route);
+  route();
+})();
+</script>
+
+</body>
+</html>
